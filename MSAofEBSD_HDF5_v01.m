@@ -21,107 +21,12 @@ seg_method=3; %0-PCA, 1-PCA+Varimax, 3-kmeans
 PatSize2=800/8;  % generally need to reduce this from as recorded
 PatSize1=576/8;  % generally need to reduce this from as recorded
 NumPCA=22;  % user input of number of basis patterns
-% select method for removing background - 0-no removal, 1-divide by gausian
+% select method for removing background 
+flatfield=1; sigma=PatSize1/10.;  % Flatfield = 0-no removal, 1-divide by gausian
 % blurred bckgnd for each image, 2-divide by mean over all images, 3-divide
 % by recorded static background 
-flatfield=1; sigma=PatSize1/10.;
+% 
 
-
-% % TKD of SiC/SiC sample - from Merlin- from Yehven
-% BaseFolder='W:\AJW\PCA tests\Test TKD - matrix\';
-% HDF5_filename='GA03-03 - fiber+free matrix.h5';
-% % these are user input - recorded patterns will be binned down to this size
-% PatSize2=320;  % generally need to reduce this from as recorded
-% PatSize1=230;  % generally need to reduce this from as recorded
-% NumPCA=40;  % user input of number of basis patterns
-% % select method for removing background - 0-no removal, 1-divide by gausian
-% % blurred bckgnd for each image, 2-divide by mean over all images, 3-divide
-% % by recorded static background 
-% flatfield=1; sigma=PatSize1/10.;
-
-% % TKD of SiC/SiC sample - from Merlin- from Yehven
-% BaseFolder='W:\AJW\PCA tests\SiC_TKD_small\';
-% HDF5_filename='test01.h5';
-% % these are user input - recorded patterns will be binned down to this size
-% PatSize2=320;  % generally need to reduce this from as recorded
-% PatSize1=230;  % generally need to reduce this from as recorded
-% NumPCA=40;  % user input of number of basis patterns
-% % select method for removing background - 0-no removal, 1-divide by gausian
-% % blurred bckgnd for each image, 2-divide by mean over all images, 3-divide
-% % by recorded static background 
-% flatfield=1; sigma=PatSize1/20.;
-% seg_method=3; %0-PCA, 1-PCA+Varimax, 3-kmeans
-
-
-
-% % EDF oxidised steel sample - from Merlin- from Yuanbo
-% BaseFolder='W:\AJW\PCA tests\EDF_steel\';
-% HDF5_filename='EDF_AW.h5';
-% % these are user input - recorded patterns will be binned down to this size
-% PatSize2=80;  % generally need to reduce this from as recorded
-% PatSize1=60;  % generally need to reduce this from as recorded
-% NumPCA=250;  % user input of number of basis patterns
-% % select method for removing background - 0-no removal, 1-divide by gausian
-% % blurred bckgnd for each image, 2-divide by mean over all images, 3-divide
-% % by recorded static background 
-% flatfield=1; sigma=PatSize1/10.;
-
-
-% % TKD of oxidised Zr sample - from Merlin- from AVC&Jing
-% BaseFolder='W:\AJW\PCA tests\ZircOxide\';
-% HDF5_filename='I X2 test 1.h5';
-% % these are user input - recorded patterns will be binned down to this size
-% PatSize2=400/2;  % generally need to reduce this from as recorded
-% PatSize1=288/2;  % generally need to reduce this from as recorded
-% NumPCA=250;  % user input of number of basis patterns
-% % select method for removing background - 0-no removal, 1-divide by gausian
-% % blurred bckgnd for each image, 2-divide by mean over all images, 3-divide
-% % by recorded static background 
-% flatfield=1; sigma=PatSize1/10.;
-% seg_method=3; %0-PCA, 1-PCA+Varimax, 3-kmeans
-
-
-% % EBSD of oxidised Zr sample - from Merlin- from JunLiang
-% BaseFolder='E:\Angus\Optimus\A9\';
-% HDF5_filename='A9_4nm.h5';
-% % these are user input - recorded patterns will be binned down to this size
-% PatSize2=100;  % generally need to reduce this from as recorded
-% PatSize1=75;  % generally need to reduce this from as recorded
-% NumPCA=500;  % user input of number of basis patterns
-% % select method for removing background - 0-no removal, 1-divide by gausian
-% % blurred bckgnd for each image, 2-divide by mean over all images, 3-divide
-% % by recorded static background 
-% flatfield=1; sigma=PatSize1/10.;
-% seg_method=1; %0-PCA, 1-PCA+Varimax, 3-kmeans
-
-
-% % EBSD of Zr sample - from Merlin- from Rajesh
-% BaseFolder='E:\Users\Angus\CP_Zr\';
-% HDF5_filename='Pg47_3_coarse.h5';
-% % these are user input - recorded patterns will be binned down to this size
-% PatSize2=50;  % generally need to reduce this from as recorded
-% PatSize1=50;  % generally need to reduce this from as recorded
-% NumPCA=200;  % user input of number of basis patterns
-% % select method for removing background - 0-no removal, 1-divide by gausian
-% % blurred bckgnd for each image, 2-divide by mean over all images, 3-divide
-% % by recorded static background 
-% flatfield=1; sigma=PatSize1/20.;
-% seg_method=1; %0-PCA, 1-PCA+Varimax, 3-kmeans
-
-
-
-% % EBSD of Si sample - from Merlin
-% BaseFolder='W:\AJW\Silicon_Tests\';
-% HDF5_filename='Si_HR_TC_0_Deg_D_BG_corrections.h5';
-% % these are user input - recorded patterns will be binned down to this size
-% PatSize2=200;  % generally need to reduce this from as recorded
-% PatSize1=144;  % generally need to reduce this from as recorded
-% NumPCA=5;  % user input of number of basis patterns
-% % select method for removing background - 0-no removal, 1-divide by gausian
-% % blurred bckgnd for each image, 2-divide by mean over all images, 3-divide
-% % by recorded static background 
-% flatfield=1; sigma=PatSize1/10.;
-% seg_method=1; %0-PCA, 1-PCA+Varimax, 3-kmeans
 
 %%  Setting up to read in data
 
@@ -129,9 +34,9 @@ flatfield=1; sigma=PatSize1/10.;
 if seg_method==0
     SaveFolder=[BaseFolder 'PCAfromHDF5'];
 elseif seg_method==1
-    SaveFolder=[BaseFolder 'VMfromHDF5_test24'];
+    SaveFolder=[BaseFolder 'VMfromHDF5'];
 elseif seg_method==3
-    SaveFolder=[BaseFolder 'KMfromHDF5_test22'];
+    SaveFolder=[BaseFolder 'KMfromHDF5'];
 end    
 mkdir(SaveFolder);
 SaveFolder=[SaveFolder '\'];
@@ -173,6 +78,7 @@ if flatfield==1
     RefPat=RefPat./BckGnd;
     BckGnd=  imgaussfilt(RefPat,sigma*size(RefPat,1)/PatSize1);
     RefPat=RefPat-BckGnd;
+    RefPat=medfilt2(RefPat,'symmetric');
 end
 RefPat=imresize(RefPat,[PatSize1, PatSize2]); % scale the image size down
 testArray(:,pattern_number)=reshape(RefPat,PatSize1*PatSize2,1);
@@ -382,39 +288,5 @@ elseif seg_method==1
 elseif seg_method==0
     grainMap=grainVMindex;
 end    
-save([SaveFolder 'GrainMap.mat'], 'grainMap' );
+save([SaveFolder 'GrainMap.mat'],'MicroscopeData', 'grainMap' );
 
-% %%     
-% % 
-% tic;
-% idxMap = kmeans(testArray',20);
-% toc;
-%     for k=1:size(FileNames,1)
-%             grainKmeans(row(k),col(k))=idxMap(k);
-%     end
-% figure;imagesc(grainKmeans);
-% 
-% 
-% 
-% % 
-% tic;
-% idxMap = kmedoids(testArray',6);
-% toc;
-%     for k=1:size(FileNames,1)
-%             grainKmeans(row(k),col(k))=idxMap(k);
-%     end
-% figure;imagesc(grainKmeans);
-% 
-% 
-% tic;
-% idxMap = mahal(testArray',6);
-% toc;
-%     for k=1:size(FileNames,1)
-%             grainKmeans(row(k),col(k))=idxMap(k);
-%     end
-% figure;imagesc(grainKmeans);
-% 
-% 
-% idxPat=reshape(idx,PatSize1,PatSize2);
-% figure;imagesc(idxPat);
-% 
