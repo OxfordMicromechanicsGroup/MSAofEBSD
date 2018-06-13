@@ -1,6 +1,6 @@
 %% This code creates a test library using MTex generated uniform odf
 % library matching is then undertaken with all patterns in a folder
-%
+%                                   Angus J Wilkinson 13 June 2018
 
 % clear existing
 clear all;
@@ -20,33 +20,34 @@ tic
 
 %% Define Master Pattern and Detector Geometry
  
-CS = crystalSymmetry('m-3m');
-Pattern=imread('Fe_2866_2866_ver3.tif'); % Import the Pattern File 
+CS = crystalSymmetry('m-3m');  %<<<-USER must edit to correct crystl symmetry
+Pattern=imread('Fe_2866_2866_ver3.tif'); %<<<-USER must edit to correct file name for the Master Pattern File 
 Pattern=Pattern(:,:,1);Pattern = double(Pattern);
 Pattern=imgaussfilt(Pattern,4);
 
 
 % steels patterns
-Xstar=0.4771; % Pattern centre as a fraction of the Width from left of the Detector Plane[note Bruker use zero on left]
-Ystar=0.7139; % Pattern centre as a fraction of the Height from bottom of the Detector Plane [note Bruker use zero at top]
-D=0.8125; % Camera Length as a fraction of the Detector Width in Pixels [note Bruker use fraction of Height]
+Xstar=0.4771; %<<<-USER Pattern centre as a fraction of the Width from left of the Detector Plane[note Bruker use zero on left]
+Ystar=0.7139; %<<<-USER Pattern centre as a fraction of the Height from bottom of the Detector Plane [note Bruker use zero at top]
+D=0.8125; %<<<-USER Camera Length as a fraction of the Detector Width in Pixels [note Bruker use fraction of Height]
 
-crop_flag=0;
+crop_flag=0; %<<<-USER - set to 0 to match entire pattern, or 1 to match only in central rectangular subsection
 
 
-sample_tilt=70.0;
-camera_tilt=5.0;
-H = 72/2; % Height of the Detector Plane in Pixels
-W = 100/2; % Width of the Detector Plane in Pixels
+
+sample_tilt=70.0; %<<<-USER sample tilt in degrees
+camera_tilt=5.0; %<<<-USER camera tilt in degrees
+H = 72/2; %<<<-USER Height to bin the patterns to in pixels
+W = 100/2; %<<<-USER Width to bin the patterns to in pixels
 
 tilt=(sample_tilt-90.0)-camera_tilt;
 
 
-points=500000;
-InputFolder='D:\Users\AJW\EBSD\Steel\Merlin\KMfromHDF5\';
+points=500000; %<<<-USER camera tilt in degrees
+InputFolder='D:\Users\AJW\EBSD\Steel\Merlin\KMfromHDF5\';%<<<-USER folder where the output from MSA analysis are kept (will include 'Patterns\' containing the characteristic patterns)
 GrainFile='GrainMap';
 ExptPatFolder=[InputFolder 'Patterns\'];
-OutputFolder=[InputFolder 'PMoutput\KM22P_50x36\'];
+OutputFolder=[InputFolder 'PMoutput\KM22P_50x36\'];%<<<-USER folder where you want the results to be written
 mkdir(OutputFolder);
 
 
@@ -55,10 +56,6 @@ mkdir(OutputFolder);
 % SS = specimenSymmetry('orthorhombic');
 SS = specimenSymmetry('triclinic');
 % % plotting convention - this was AJW interpretation of 'which way is up' 
-% setMTEXpref('xAxisDirection','east');
-% setMTEXpref('zAxisDirection','outofPlane');
-
-% plotting convention - this gives consistent plots with Bruker output
 setMTEXpref('xAxisDirection','east');
 setMTEXpref('zAxisDirection','intoPlane');
 
@@ -226,7 +223,6 @@ Lcount=1;
 Xstep=MSAdata.MicroscopeData.XSTEP;
 Ystep=MSAdata.MicroscopeData.YSTEP;
 
-fEBSD=fopen('tempEBSDmap.txt', 'w');
 for i=1:size(MSAdata.grainMap,1)
     for j=1:size(MSAdata.grainMap,2)
         OriNum=MSAdata.grainMap(i,j);
@@ -236,13 +232,11 @@ for i=1:size(MSAdata.grainMap,1)
         IPF_Z_map(i,j,1:3)=IPF_Z_color(OriNum,1:3);
         IPF_Y_map(i,j,1:3)=IPF_Y_color(OriNum,1:3);
         IPF_X_map(i,j,1:3)=IPF_X_color(OriNum,1:3);
-%         fwrite(fEBSD,[i,j,OriNum,phi1(CCindex{OriNum}(1)),Phi(CCindex{OriNum}(1)),phi2(CCindex{OriNum}(1)),CCvalMap(i,j)]);
         EBSDtext(Lcount,:)=[i*Xstep,j*Ystep,OriNum,phi1(CCindex{OriNum}(1)),Phi(CCindex{OriNum}(1)),phi2(CCindex{OriNum}(1)),CCvalMap(i,j)];
         Lcount=Lcount+1;
     end
 end
 csvwrite('tempEBSDmap.csv',EBSDtext) ;
-fclose(fEBSD);
 toc
 
 figure;imagesc(CCvalMap);axis image;colormap('jet');colorbar;
